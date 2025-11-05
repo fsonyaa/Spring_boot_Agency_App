@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevSync Circular Process</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General and Variable Setup --- */
+        :root {
+            --primary-blue: #007bff;
+            --light-blue-bg: #e6f7ff;
+            --dark-gray: #333;
+            --medium-gray: #555;
+            --text-gray: #888;
+            --border-gray: #e0e0e0;
+            --circle-size: 250px;
+            /* Taille du cercle central */
+            --radius: 200px;
+            /* Rayon pour placer les étapes (distance du centre) */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 50px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .header-section h1 {
+            font-size: 44px;
+            font-weight: 600;
+            color: var(--dark-gray);
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .header-section h1 span {
+            color: var(--primary-blue);
+        }
+
+        .header-section h2 {
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--text-gray);
+            font-style: italic;
+            margin-top: 0;
+        }
+
+        .content-section {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            /* Centrer les deux panneaux */
+            align-items: center;
+            /* Ajouté pour un meilleur alignement vertical */
+        }
+
+        /* --- Left Panel (Circular Process) --- */
+        .left-panel {
+            flex: 0 0 500px;
+            /* Largeur pour contenir le cercle et l'arc */
+            height: 500px;
+            /* Hauteur pour centrer l'arc */
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .lorem-circle {
+            width: var(--circle-size);
+            height: var(--circle-size);
+            background-color: #fff;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .lorem-circle h3 {
+            font-size: 28px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .lorem-circle span {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            line-height: 1;
+        }
+
+        .steps-arc {
+            width: calc(var(--radius) * 2);
+            height: calc(var(--radius) * 2);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Les flèches/points de connexion sur le cercle */
+        .steps-arc::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* Ajustement pour que le cercle pointillé englobe les numéros */
+            width: calc(100% + 50px);
+            height: calc(100% + 50px);
+            border: 1px dashed var(--border-gray);
+            /* Ligne pointillée */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .step {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            width: 100px;
+            /* Largeur pour le bouton */
+            height: 100px;
+            z-index: 6;
+            /* Au-dessus de la ligne pointillée */
+        }
+
+        /* Positionnement des 5 étapes sur l'arc */
+        .step[data-number="1"] {
+            transform: rotate(-120deg) translate(var(--radius)) rotate(120deg);
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        .step[data-number="2"] {
+            transform: rotate(-75deg) translate(var(--radius)) rotate(75deg);
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        .step[data-number="3"] {
+            transform: rotate(-30deg) translate(var(--radius)) rotate(30deg);
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        .step[data-number="4"] {
+            transform: rotate(15deg) translate(var(--radius)) rotate(-15deg);
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        .step[data-number="5"] {
+            transform: rotate(60deg) translate(var(--radius)) rotate(-60deg);
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        .step-number-container {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            border: 2px solid var(--border-gray);
+            background-color: #fff;
+            z-index: 10;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .step.active .step-number-container {
+            border-color: var(--primary-blue);
+            background-color: var(--light-blue-bg);
+        }
+
+        .step-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-gray);
+            transition: color 0.3s ease;
+        }
+
+        .step.active .step-number {
+            color: var(--primary-blue);
+        }
+
+        .step-button {
+            background-color: var(--light-blue-bg);
+            color: var(--primary-blue);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
+            /* Empêche le nom de l'étape de se couper */
+        }
+
+        .step.active .step-button {
+            background-color: var(--primary-blue);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+
+        /* --- Right Panel (Content) --- */
+        .right-panel {
+            flex: 0 0 500px;
+            margin-left: 40px;
+            padding-left: 40px;
+            border-left: 1px solid var(--border-gray);
+            position: relative;
+            min-height: 300px;
+            /* Hauteur minimale pour l'alignement */
+        }
+
+        .right-panel h3 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-top: 0;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .right-panel h3 span {
+            color: var(--primary-blue);
+            font-size: 56px;
+            font-weight: 700;
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0.1;
+            line-height: 1;
+            z-index: 0;
+        }
+
+        .right-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .right-panel ul li {
+            font-size: 16px;
+            color: var(--medium-gray);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+
+        .right-panel ul li::before {
+            content: '★';
+            /* Correspond à la puce de l'image originale (ressemble à un astérisque/étoile) */
+            color: var(--primary-blue);
+            font-size: 18px;
+            margin-right: 10px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Paying Builders With <span>Secure</span></h1>
+            <h2>Payment Software</h2>
+        </div>
+
+        <div class="content-section">
+            <div class="left-panel">
+                <div class="lorem-circle">
+                    <h3>What Is<br><span>Lorem?</span></h3>
+                </div>
+                <div class="steps-arc" id="steps-arc">
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h3 id="detail-title">Quote <span>01</span></h3>
+                <ul id="detail-list">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PARTIE JS AVEC LE TEXTE EXACT DE L'IMAGE ---
+
+        const processStepsData = [
+            {
+                number: 1,
+                name: "Quote",
+                title: "Quote",
+                details: [
+                    "Tradesperson agrees a quote with the customer upfront",
+                    "Tradesperson uploads quote to Lorem and sends it to the customer"
+                ]
+            },
+            {
+                number: 2,
+                name: "Pay Fee",
+                title: "Pay Fee",
+                details: [
+                    "Customer reviews the quote and accepts it",
+                    "Customer pays the agreed-upon fee into the secure Lorem system"
+                ]
+            },
+            {
+                number: 3,
+                name: "Complete Work",
+                title: "Complete Work",
+                details: [
+                    "The fee is held securely by Lorem while work is in progress",
+                    "Tradesperson completes the job as per the quote"
+                ]
+            },
+            {
+                number: 4,
+                name: "Rate",
+                title: "Rate",
+                details: [
+                    "Customer inspects the completed work",
+                    "Customer marks the job as complete in the system",
+                    "Option to rate the tradesperson's service"
+                ]
+            },
+            {
+                number: 5,
+                name: "Release Fund",
+                title: "Release Fund",
+                details: [
+                    "Once marked complete, the funds are automatically released",
+                    "Tradesperson receives payment instantly"
+                ]
+            }
+        ];
+
+        const stepsArcElement = document.getElementById('steps-arc');
+        const detailTitleElement = document.getElementById('detail-title');
+        const detailListElement = document.getElementById('detail-list');
+
+        function renderProcessSteps() {
+            processStepsData.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'step';
+                stepDiv.dataset.number = step.number;
+
+                // Le CSS utilise data-number pour le positionnement sur l'arc
+
+                stepDiv.innerHTML = `
+                <div class="step-number-container">
+                    <span class="step-number">${step.number < 10 ? '0' + step.number : step.number}</span>
+                </div>
+                <div class="step-button">${step.name}</div>
+            `;
+
+                stepDiv.addEventListener('click', () => updateDetails(step.number));
+                stepsArcElement.appendChild(stepDiv);
+            });
+        }
+
+        function updateDetails(stepNumber) {
+            const activeStepData = processStepsData.find(step => step.number === stepNumber);
+
+            // Update active class on steps (for both container and button styles)
+            document.querySelectorAll('.step').forEach(stepDiv => {
+                if (parseInt(stepDiv.dataset.number) === stepNumber) {
+                    stepDiv.classList.add('active');
+                } else {
+                    stepDiv.classList.remove('active');
+                }
+            });
+
+            // Update right panel content
+            const paddedNumber = activeStepData.number < 10 ? '0' + activeStepData.number : activeStepData.number;
+            detailTitleElement.innerHTML = `${activeStepData.title} <span>${paddedNumber}</span>`;
+            detailListElement.innerHTML = ''; // Clear previous list items
+
+            activeStepData.details.forEach(detail => {
+                const li = document.createElement('li');
+                li.textContent = detail;
+                detailListElement.appendChild(li);
+            });
+        }
+
+        // Initialize
+        renderProcessSteps();
+        updateDetails(1); // Load details for the first step by default
+    </script>
+
+</body>
+
+</html>
